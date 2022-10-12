@@ -7,9 +7,7 @@ import math
 USERS = []
 # マッチテーブル(ユーザー毎のマッチ回数)
 MATCH_TABLE = []
-# マッチ最大数
-MATCH_MAX = 0
-# 目標数値( (グループ人数-1) * 回数 / ユーザー数 で算出する)
+# 目標値( (グループ人数-1) * 回数 / (ユーザー数 - 1) で算出する)
 OBJECT_VALUE = 0
 
 def main():
@@ -93,23 +91,20 @@ def evaluation_score(users):
             match_count = MATCH_TABLE[users[j]][u]
             if(match_count < OBJECT_VALUE):
                 # ユーザー数を底とするのは、指数の1の差を最大にするため(全て+1の組より、+2が一つでもある組が優先されるようにする)
-                score += pow(len(USERS), MATCH_MAX - match_count)
+                score += pow(len(USERS), OBJECT_VALUE - match_count)
             else:
-                # 指数に最大マッチ数を加算することで、0よりもマイナス度合いを高くする
-                score -= pow(len(USERS), MATCH_MAX + match_count - OBJECT_VALUE + 1)
+                # 指数に目標値を加算することで、0よりもマイナス度合いを高くする
+                score -= pow(len(USERS), OBJECT_VALUE + match_count - OBJECT_VALUE + 1)
     return score
 
 # マッチテーブルにグループ群を適用する
 def add_match_table(groups):
     global MATCH_TABLE
-    global MATCH_MAX
     for group in groups:
         sorted_group = sorted(group)
         for i in range(len(sorted_group) - 1):
             for u in sorted_group[i + 1:]:
                 MATCH_TABLE[sorted_group[i]][u] += 1
-                if(MATCH_MAX < MATCH_TABLE[sorted_group[i]][u]):
-                    MATCH_MAX = MATCH_TABLE[sorted_group[i]][u]
 
 # 名前作成
 def num2alpha(num):
