@@ -94,7 +94,7 @@ def evaluation_score(users):
                 score += pow(len(USERS), OBJECT_VALUE - match_count)
             else:
                 # 指数に目標値を加算することで、0よりもマイナス度合いを高くする
-                score -= pow(len(USERS), OBJECT_VALUE + match_count - OBJECT_VALUE + 1)
+                score -= pow(len(USERS), match_count + 1)
     return score
 
 # マッチテーブルにグループ群を適用する
