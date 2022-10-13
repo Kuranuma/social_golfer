@@ -27,7 +27,7 @@ def main():
     global OBJECT_VALUE
     USERS = [i for i in range(group_user_num * group_num)]
     MATCH_TABLE = [[0 for i in range(len(USERS))] for j in range(len(USERS))]
-    OBJECT_VALUE = math.ceil((group_user_num - 1) * time / (len(USERS) - 1))
+    OBJECT_VALUE = round((group_user_num - 1) * time / (len(USERS) - 1))
 
     all_groups = []
     for t in range(time):
