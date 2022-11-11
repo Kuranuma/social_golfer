@@ -21,23 +21,23 @@
       1 E F G H
       1 I J K L
       2 A I B E
-      2 C J F G
-      2 L K D H
-      3 A B J H
-      3 C E K L
-      3 I D F G
-      4 A C K F
-      4 B L G H
-      4 I J D E
-      5 A C H I
-      5 B K E F
-      5 L J D G
-      6 A L D F
-      6 B G I K
-      6 J C E H
-      7 A L E G
-      7 B I F H
-      7 K J C D
-      8 A J K G
-      8 B C F L
-      8 I D E H
+      2 C J D F
+      2 K L G H
+      3 A C K G
+      3 B L D E
+      3 I J F H
+      4 A K D F
+      4 B I C G
+      4 J L E H
+      5 A J E G
+      5 B C L F
+      5 I K D H
+      6 A F I L
+      6 B J D G
+      6 C K E H
+      7 A B H J
+      7 C D E I
+      7 K L F G
+      8 A C L H
+      8 B E F K
+      8 I J D G
