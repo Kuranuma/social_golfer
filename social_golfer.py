@@ -1,7 +1,7 @@
 import sys
 import copy
 import itertools
-import math
+from scipy import special
 
 # ユーザー一覧
 USERS = []
@@ -47,7 +47,7 @@ def make_groups(group_user_num, group_num):
         group_top_user = remaining_users.pop(0)
         # 残ユーザーのうちの先頭ユーザーを基準に最適なグループ一覧を取得する
         # 先頭ユーザー+先頭以外の残ユーザーの全組み合わせを候補とする
-        best_users_list = get_best_users([[group_top_user] + list(u) for u in itertools.combinations(remaining_users, group_user_num - 1)])
+        best_users_list = get_best_users([[group_top_user] + list(u) for u in itertools.combinations(remaining_users, group_user_num - 1)], special.comb(len(remaining_users), group_user_num - 1, True))
         # 結果が1つならそれを結果として確定する
         if(len(best_users_list) == 1):
             groups.append(best_users_list[0])
@@ -56,7 +56,7 @@ def make_groups(group_user_num, group_num):
 
         # 残りのユーザーの組み合わせから最適な組み合わせを割り出す
         # (現在のグループを確定させた後のユーザー群に最適な組み合わせが残るようにする)
-        temp_users_list = get_best_users([list(set(remaining_users) - set(u)) for u in best_users_list])
+        temp_users_list = get_best_users([list(set(remaining_users) - set(u)) for u in best_users_list], special.comb(len(remaining_users) - group_user_num - 1, group_user_num, True))
         best_users = [group_top_user] + list(set(remaining_users) - set(temp_users_list[0]))
         groups.append(best_users)
         remaining_users = list(set(remaining_users) - set(best_users))
@@ -67,11 +67,11 @@ def make_groups(group_user_num, group_num):
     return groups
 
 # 最適なグループ一覧を返す(同価値のグループが複数返される)
-def get_best_users(users_list):
+def get_best_users(users_list, combinationCount):
     best_score = -sys.maxsize - 1 
     best_users = []
     for users in users_list:
-        score = evaluation_score(users)
+        score = evaluation_score(users, combinationCount)
         if best_score < score:
             best_score = score
             best_users = [users]
@@ -81,7 +81,7 @@ def get_best_users(users_list):
     return best_users
 
 # スコア計算
-def evaluation_score(users):
+def evaluation_score(users, combinationCount):
     global MATCH_TABLE
     global OBJECT_VALUE
     global USERS
@@ -90,11 +90,11 @@ def evaluation_score(users):
         for u in users[j + 1:]:
             match_count = MATCH_TABLE[users[j]][u]
             if(match_count < OBJECT_VALUE):
-                # ユーザー数を底とするのは、指数の1の差を最大にするため(全て+1の組より、+2が一つでもある組が優先されるようにする)
-                score += pow(len(USERS), OBJECT_VALUE - match_count)
+                # 組み合わせ数を底とするのは、指数の1の差を最大にするため(全て+1の組より、+2が一つでもある組が優先されるようにする)
+                score += pow(combinationCount, OBJECT_VALUE - match_count)
             else:
                 # 指数に目標値を加算することで、0よりもマイナス度合いを高くする
-                score -= pow(len(USERS), match_count + 1)
+                score -= pow(combinationCount, match_count + 1)
     return score
 
 # マッチテーブルにグループ群を適用する
